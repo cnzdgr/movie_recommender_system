@@ -1,0 +1,9 @@
+credits_file: credits.csv
+keywords_file: keywords.csv
+links_file: links.csv
+metadata_file: movies_metadata.csv
+ratings_file: ratings.csv
+model_name: movie_recommender
+version: '0.0.1'
+save_file_model: movie_recommender_output_v
+target: movie
