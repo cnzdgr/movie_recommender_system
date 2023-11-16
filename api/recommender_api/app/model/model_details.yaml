@@ -6,4 +6,23 @@ ratings_file: ratings.csv
 model_name: movie_recommender
 version: '0.0.1'
 save_file_model: movie_recommender_output_v
-target: movie
+metadata_columns: 
+metadata_vars:
+  - genres
+  - id                #must stay
+  - original_language
+  - original_title
+  - overview
+  - runtime
+  - title
+  - vote_count
+link_vars:
+  - movieId
+  - tmdbId                #must stay
+feature_to_must_have:
+  - movieId
+  - tmdbId
+  - overview
+vote_count_lower_bound: 1000
+voter_min_vote: 200
+

@@ -29,7 +29,11 @@ class AppConfig(BaseModel):
 
 class ModelConfig(BaseModel):
     # Model-dependent configuration
-    target: str
+    metadata_vars: list
+    link_vars: list
+    feature_to_must_have: list
+    vote_count_lower_bound: float
+    voter_min_vote: float
 
 
 class Config(BaseModel):
@@ -56,6 +60,7 @@ def fetch_config_from_yaml(yml_path: Path = None) -> YAML:
     if yml_path:
         with open(yml_path, "r") as conf_file:
             parsed_config = load(conf_file.read())
+            
             return parsed_config
     raise OSError(f"Did not find config file at path: {yml_path}")
 
@@ -71,7 +76,6 @@ def validate_config(parsed_config: YAML = None) -> Config:
     _config = Config(a_config = AppConfig(**parsed_config.data), 
                      m_config = ModelConfig(**parsed_config.data),
                      )
-
     return _config
 
 config = validate_config()
