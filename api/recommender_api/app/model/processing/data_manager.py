@@ -2,16 +2,16 @@ import os
 import sys
 from pathlib import Path
 from typing import List
+import pandas as pd
+import joblib
+from sklearn.pipeline import Pipeline
 
 # Adding the ROOT path 
 d = os.getcwd()
 par_3 = os.path.dirname(os.path.dirname(os.path.dirname(d)))
 sys.path.append(par_3)
 
-import pandas as pd
-import joblib
-from sklearn.pipeline import Pipeline
-from app.model.model_config import DATASET_DIR, TRAINED_MODEL_DIR, config
+from app.model.model_config import DATASET_DIR, DATAFRAME_DIR, TRAINED_MODEL_DIR, config
 
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
@@ -35,7 +35,7 @@ def save_model(*, model_to_keep: Pipeline) -> None:
     
 
 def load_model(*, file_name: str) -> Pipeline:
-    """Load a persisted pipeline."""
+    '''Load a trained model'''
 
     file_path = TRAINED_MODEL_DIR / file_name
     return joblib.load(filename=file_path)
@@ -43,7 +43,7 @@ def load_model(*, file_name: str) -> Pipeline:
 
 def remove_old_model(*, files_to_keep: List[str]) -> None:
     '''
-    To remove old model/s (output of the pipeline).
+    To remove old model/s (output of the training pipeline).
     To be sure there is one-to-one mapping between package version
     and model version to be used in other parts
     '''

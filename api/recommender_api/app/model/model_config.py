@@ -13,7 +13,9 @@ MODEL_ROOT = Path(__file__).resolve().parent
 ROOT = MODEL_ROOT.parent.parent
 YAML_FILE_PATH = MODEL_ROOT / "model_details.yaml"
 DATASET_DIR = MODEL_ROOT / "datasets"
+DATAFRAME_DIR = MODEL_ROOT / "dataframes"
 TRAINED_MODEL_DIR = MODEL_ROOT / "trained_models"
+
 
 
 '''Validating configuration by object type'''
@@ -34,6 +36,7 @@ class ModelConfig(BaseModel):
     feature_to_must_have: list
     vote_count_lower_bound: float
     voter_min_vote: float
+    main_key_value: str
 
 
 class Config(BaseModel):

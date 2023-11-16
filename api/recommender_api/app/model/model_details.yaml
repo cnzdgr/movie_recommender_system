@@ -23,6 +23,7 @@ feature_to_must_have:
   - movieId
   - tmdbId
   - overview
-vote_count_lower_bound: 1000
-voter_min_vote: 200
+main_key_value: tmdbId
+vote_count_lower_bound: 1500
+voter_min_vote: 250
 
