@@ -1,9 +1,9 @@
 import os
 import sys
-from pathlib import Path
-from typing import List
-import pandas as pd
 import joblib
+import pandas as pd
+from typing import List
+from pathlib import Path
 from sklearn.pipeline import Pipeline
 
 # Adding the ROOT path 
@@ -20,16 +20,16 @@ def load_dataset(*, file_name: str) -> pd.DataFrame:
     return df
 
 
-def save_model(*, model_to_keep: Pipeline) -> None:
+def save_model(*, model_to_keep: Pipeline, model_type: str) -> None:
     '''
     Saves the model (output of the pipeline) and removes previous models
     By this way, we will be sure there is only 1 model 
     '''   
-
-    save_file_name = f"{config.a_config.save_file_model}{config.a_config.version}.pkl"
+    save_file_root = f"{config.a_config.save_file_model}{config.a_config.version}"
+    save_file_name = save_file_root+f"_{model_type}.pkl"
     save_path = TRAINED_MODEL_DIR / save_file_name
 
-    remove_old_model(files_to_keep=[save_file_name])
+    remove_old_model(files_to_keep=[save_file_root+"_knn.pkl", save_file_root+"_sentence_transformer.pkl"])
     
     joblib.dump(model_to_keep, save_path)
     
@@ -39,6 +39,18 @@ def load_model(*, file_name: str) -> Pipeline:
 
     file_path = TRAINED_MODEL_DIR / file_name
     return joblib.load(filename=file_path)
+
+
+def save_dataframe(*, df, df_name:str) -> None:
+    save_path = DATAFRAME_DIR / df_name
+    df.to_csv(save_path)
+
+    
+def load_dataframe(*, df_name:str) -> pd.DataFrame():
+    file_path = DATAFRAME_DIR / df_name
+    df = pd.read_csv(file_path)
+    
+    return df
 
 
 def remove_old_model(*, files_to_keep: List[str]) -> None:

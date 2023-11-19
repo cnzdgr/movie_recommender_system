@@ -13,36 +13,31 @@ par_par = os.path.dirname(par)
 sys.path.append(par_par)
     
 from app.model.model_config import config
-from app.model.processing.data_manager import load_model
+from app.model.processing.data_manager import load_model, load_dataframe
 
-save_file_model = f"{config.a_config.save_file_model}{config.a_config.version}.pkl"
-prediction_model = load_model(file_name=save_file_model)
+save_file_knn = f"{config.a_config.save_file_model}{config.a_config.version}_knn.pkl"
+prediction_model = load_model(file_name=save_file_knn)
 
 
-def make_prediction(*,input_movie: str]) -> list[list]:
+def make_prediction(*,input_movie: str) -> list:
     """Make a prediction using a saved model pipeline."""
-    dist, idx = prediction_model(input_movie)
+    rating_matrix = load_dataframe(df_name='rating_matrix_id.csv')
+    name_mapper = load_dataframe(df_name='movie_map.csv')
+    movieId = name_mapper.loc[name_mapper['original_title'] == input_movie]['movieId'].values[0]
+    rec_list = []
+    movie_ratings = rating_matrix.loc[rating_matrix['movieId']==movieId].values.reshape(1,-1)[0][1:].reshape(1,-1)
     
-    validated_data, errors = validate_inputs(input_data=data)
-    results = {"predictions": None, "version": config.a_config.version, "errors": errors}
+    dist, idx = prediction_model.kneighbors(movie_ratings,n_neighbors=20)
+    for i in range(0, len(dist.flatten())):
+        movie_idx = rating_matrix.iloc[idx.flatten()[i]]['movieId']
+        movie_dist = dist.flatten()[i]
+        rec_list.append((movie_idx, movie_dist))
 
-    if not errors:
-        predictions = _titanic_pipe.predict(
-            X=validated_data[config.m_config.features]
-        )
-        results = {
-            "predictions": predictions,
-            "version": config.a_config.version,
-            "errors": errors,
-        }
-        
-    return results
+    return rec_list
 
 '''
 # Use if you need to check the function make_prediction
-from processing.data_manager import load_dataset
-data = load_dataset(file_name=config.a_config.test_data_file)
-new_preds = make_prediction(input_data=data)
-result = pd.DataFrame(new_preds['predictions'], columns=["Survived"])
+new_preds = make_prediction(input_movie='Ace Ventura: When Nature Calls')
+result = pd.DataFrame(new_preds)
 result.to_csv('result.csv', index=False)
 '''

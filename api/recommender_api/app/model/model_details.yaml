@@ -24,6 +24,6 @@ feature_to_must_have:
   - tmdbId
   - overview
 main_key_value: tmdbId
-vote_count_lower_bound: 1500
-voter_min_vote: 250
+vote_count_lower_bound: 600
+voter_min_vote: 50
 

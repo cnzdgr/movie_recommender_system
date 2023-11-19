@@ -6,8 +6,8 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-from collections import Counter
 from ast import literal_eval
+from collections import Counter
 
 # Adding the ROOT path 
 d = os.getcwd()
@@ -15,8 +15,7 @@ par_3 = os.path.dirname(os.path.dirname(os.path.dirname(d)))
 sys.path.append(par_3)
 
 from app.model.model_config import config
-from app.model.model_config import DATAFRAME_DIR, TRAINED_MODEL_DIR, config
-from app.model.processing.data_manager import load_dataset
+from app.model.processing.data_manager import load_dataset, save_dataframe
 
 
 def metadata_df() -> pd.DataFrame:
@@ -53,9 +52,13 @@ def clean_metadata_df(df_meta: pd.DataFrame) ->pd.DataFrame:
     df_meta_clean['keywords'] = df_meta_clean['keywords'].apply(lambda x: req_string(x))
 
     df_meta_clean['keywords'] = df_meta_clean['keywords'].apply(get_list)
-    #df_meta_clean.drop_duplicates(inplace=True)
+    df_meta_clean.drop_duplicates(subset=['movieId'], inplace=True)
 
     return df_meta_clean
+
+
+def movie_name_mapper(df: pd.DataFrame) ->pd.DataFrame:
+    return df[['movieId', 'original_title']]
 
 
 def rating_df() -> pd.DataFrame:
@@ -71,8 +74,17 @@ def rating_df() -> pd.DataFrame:
     return df
 
 
-def rating_matrix(rating_df):  
+def rating_matrix_id(rating_df):  
     rating_matrix = rating_df.pivot_table(index='movieId',  columns='userId', values='rating')
+    return rating_matrix
+
+
+def rating_matrix_name(rating_df):
+    metadata = metadata_df()
+    metadata = metadata[['movieId', 'original_title']]
+    rating_matrix = pd.merge(rating_df, metadata, on="movieId",how="inner")
+    rating_matrix.drop(['movieId'], axis=1, inplace=True)
+    rating_matrix = rating_matrix.pivot_table(index='original_title', columns='userId', values='rating')
     return rating_matrix
 
 
@@ -111,19 +123,32 @@ def less_active_voters_filter(df: pd.DataFrame) -> list:
     freq_voters = np.array(freq_voters.index)
     df = df[df['userId'].isin(freq_voters)]
     return df
+
 # ------------------- HELPER FUNCTIONS ----------------------
 
-
-
-
-if __name__ == "__main__":
+def create_all_dataframes():
+    '''Creates all required dataframes'''
     metadata_frame = metadata_df()
     clean_metadata_frame = clean_metadata_df(metadata_frame)
-    clean_metadata_frame.to_csv("metadata.csv")
+    save_dataframe(df=clean_metadata_frame, df_name="metadata.csv")
     
     ratings_df = rating_df()
-    rating_mtx = rating_matrix(ratings_df)
-    filled_mtx = filled_rating_matrix(rating_mtx)
-    filled_mtx.to_csv("rating_matrix.csv")
+    rating_mtx_id = rating_matrix_id(ratings_df)
+    filled_mtx_id = filled_rating_matrix(rating_mtx_id)
+    print(filled_mtx_id.head())
+    save_dataframe(df=filled_mtx_id, df_name="rating_matrix_id.csv")
+    
+    movie_name_map = movie_name_mapper(metadata_frame)
+    save_dataframe(df=movie_name_map, df_name="movie_map.csv")
+    
+    
+    rating_mtx_names = rating_matrix_name(ratings_df)
+    filled_mtx_names = filled_rating_matrix(rating_mtx_names)
+    save_dataframe(df=filled_mtx_names, df_name="rating_matrix_names.csv")
+    
+    
+if __name__ == "__main__":
+    create_all_dataframes()
+
 
     
