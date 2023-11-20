@@ -56,6 +56,10 @@ def clean_metadata_df(df_meta: pd.DataFrame) ->pd.DataFrame:
 
     return df_meta_clean
 
+def overview_df(df_meta:pd.DataFrame) -> pd.DataFrame:
+    df_overview = df_meta[['movieId', 'original_title', 'overview']]
+    return df_overview
+
 
 def movie_name_mapper(df: pd.DataFrame) ->pd.DataFrame:
     return df[['movieId', 'original_title']]
@@ -111,15 +115,16 @@ def req_string(x):
     
     
 def less_voted_movies(df: pd.DataFrame) -> list:
+    '''Eliminate movies that have less than specified votes(not famous)'''
     less_voted = df[df['vote_count'] < config.m_config.vote_count_lower_bound]
     less_voted = less_voted['movieId']
     return less_voted.tolist()
 
 
 def less_active_voters_filter(df: pd.DataFrame) -> list:
-    
+    '''Eliminate voters that has voted for less than the specified amount'''
     user_groupby = pd.Series(Counter(df['userId']))
-    freq_voters = user_groupby.loc[lambda x : x > 50]
+    freq_voters = user_groupby.loc[lambda x : x > config.m_config.voter_min_vote]
     freq_voters = np.array(freq_voters.index)
     df = df[df['userId'].isin(freq_voters)]
     return df
@@ -132,16 +137,17 @@ def create_all_dataframes():
     clean_metadata_frame = clean_metadata_df(metadata_frame)
     save_dataframe(df=clean_metadata_frame, df_name="metadata.csv")
     
+    overview_frame = overview_df(metadata_frame)
+    save_dataframe(df=overview_frame, df_name="overview.csv")
+    
     ratings_df = rating_df()
     rating_mtx_id = rating_matrix_id(ratings_df)
     filled_mtx_id = filled_rating_matrix(rating_mtx_id)
-    print(filled_mtx_id.head())
     save_dataframe(df=filled_mtx_id, df_name="rating_matrix_id.csv")
     
     movie_name_map = movie_name_mapper(metadata_frame)
     save_dataframe(df=movie_name_map, df_name="movie_map.csv")
-    
-    
+        
     rating_mtx_names = rating_matrix_name(ratings_df)
     filled_mtx_names = filled_rating_matrix(rating_mtx_names)
     save_dataframe(df=filled_mtx_names, df_name="rating_matrix_names.csv")

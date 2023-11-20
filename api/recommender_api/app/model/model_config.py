@@ -4,7 +4,6 @@ And combine/validate all model configuations
 '''
 
 from pathlib import Path
-from typing import List
 from pydantic import BaseModel
 from strictyaml import YAML, load
 

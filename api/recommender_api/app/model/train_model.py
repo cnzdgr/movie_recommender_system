@@ -13,7 +13,6 @@ d = os.getcwd()
 par_2 = os.path.dirname(os.path.dirname(d))
 sys.path.append(par_2)
 
-from app.model.model_config import config
 from app.model.processing.data_manager import load_dataframe, save_model
 from app.model.processing.dataframe_creator import create_all_dataframes
 
@@ -24,11 +23,9 @@ def run_training() -> None:
     #create_all_dataframes()
     rating_matrix = load_dataframe(df_name='rating_matrix_id.csv')
     rating_matrix = rating_matrix.iloc[: , 1:]
-    
-    
+        
     knn = NearestNeighbors(metric='cosine', algorithm='brute', n_neighbors=20, n_jobs=2)
     knn.fit(rating_matrix)
-
     save_model(model_to_keep=knn, model_type='knn')
 
 if __name__ == "__main__":

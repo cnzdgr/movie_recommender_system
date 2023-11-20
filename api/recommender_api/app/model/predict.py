@@ -3,9 +3,7 @@ Uses the saved model and makes prediction
 '''
 import sys
 import os 
-import typing as t
 import pandas as pd
-from pathlib import Path
 
 d = os.getcwd()
 par = os.path.dirname(d)
