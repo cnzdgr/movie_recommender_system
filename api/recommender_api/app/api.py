@@ -19,16 +19,17 @@ api_router = APIRouter()
 
 
 @api_router.post("/predict", response_model=schemas.PredictionResults, status_code=200)
-async def predict(input_data: schemas.MultipleMovieDataInputs) -> Any:
+async def predict(input_data: schemas.MovieDataInput) -> Any:
     '''
     POST request to the API, response needs to be matching with the schema and contains
     (i) predictions, (ii) version
+    1 movie at a time, only takes the first movie if more than 1 is provided.
     '''
     input_df = pd.DataFrame(jsonable_encoder(input_data.inputs))
-    logger.info(f"Predicting using inputs: {input_data.inputs}")
+    movie_input = input_data.inputs
+    logger.info(f"Predicting using inputs: {movie_input}")
     results = make_prediction(input_movie=input_df.replace({np.nan: None})['Movie'][0])
     
-
     logger.info(f"Model Predictions: {results.get('predictions')}")
 
     return results

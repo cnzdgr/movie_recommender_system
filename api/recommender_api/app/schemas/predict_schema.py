@@ -15,7 +15,7 @@ class MovieInputSchema(BaseModel):
     Movie: Optional[str]
 
 
-class MultipleMovieDataInputs(BaseModel):
+class MovieDataInput(BaseModel):
     inputs: List[MovieInputSchema]
 
     class Config:
@@ -24,7 +24,6 @@ class MultipleMovieDataInputs(BaseModel):
                 "inputs": [
                     {
                         "Movie": "Batman Begins",
-
                     }
                 ]
             }

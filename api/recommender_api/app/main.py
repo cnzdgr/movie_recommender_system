@@ -1,6 +1,6 @@
-from typing import Any
-import sys
 import os
+import sys
+from typing import Any
 
 # Adding the main folder to sys.path
 d = os.getcwd()
@@ -8,11 +8,11 @@ sys.path.append(os.path.dirname(d))
 
 from loguru import logger
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, FastAPI, Request
+from app.api import api_router
 from app.api_config import settings
 
-from app.api import api_router
-from fastapi import APIRouter, FastAPI, Request
-from fastapi.responses import HTMLResponse
 
 
 root_router = APIRouter()
@@ -22,18 +22,18 @@ app = FastAPI(
 
 @root_router.get("/")
 def index(request: Request) -> Any:
-    """Basic HTML response."""
+    '''Default HTML response for the main page, directing to docs'''
     body = (
         "<html>"
         "<body style='padding: 10px;'>"
-        "<h1>Welcome to the API</h1>"
+        "<h1>Welcome to the Movie Recommender API</h1>"
         "<div>"
         "Check the docs: <a href='/docs'>here</a>"
         "</div>"
         "</body>"
         "</html>"
     )
-
+    
     return HTMLResponse(content=body)
 
 
