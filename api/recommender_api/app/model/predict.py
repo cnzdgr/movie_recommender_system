@@ -19,7 +19,7 @@ save_file_knn = f"{config.a_config.save_file_model}{config.a_config.version}_knn
 prediction_model = load_model(file_name=save_file_knn)
 
 
-def make_prediction(*,input_movie: str) -> list:
+def make_prediction(*,input_movie: str) -> dict:
     """Make a prediction using a saved model pipeline."""
     rating_matrix = load_dataframe(df_name='rating_matrix_id.csv')
     name_mapper = load_dataframe(df_name='movie_map.csv')
@@ -30,14 +30,17 @@ def make_prediction(*,input_movie: str) -> list:
     dist, idx = prediction_model.kneighbors(movie_ratings,n_neighbors=20)
     for i in range(0, len(dist.flatten())):
         movie_idx = rating_matrix.iloc[idx.flatten()[i]]['movieId']
+        movie_name = name_mapper.loc[name_mapper['movieId'] == movie_idx]['original_title'].values[0]
         movie_dist = dist.flatten()[i]
-        rec_list.append((movie_idx, movie_dist))
+        rec_list.append((movie_name, movie_dist))
 
-    return rec_list
+    results = {
+        "predictions": rec_list,
+        "version": config.a_config.version,
+        }
+    return results
 
-'''
 # Use if you need to check the function make_prediction
 new_preds = make_prediction(input_movie='Ace Ventura: When Nature Calls')
 result = pd.DataFrame(new_preds)
 result.to_csv('result.csv', index=False)
-'''
