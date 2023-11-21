@@ -57,7 +57,10 @@ def clean_metadata_df(df_meta: pd.DataFrame) ->pd.DataFrame:
     return df_meta_clean
 
 def overview_df(df_meta:pd.DataFrame) -> pd.DataFrame:
+    less_voted = less_voted_movies(metadata_df())
+
     df_overview = df_meta[['movieId', 'original_title', 'overview']]
+    df_overview = df_overview[~df_overview['movieId'].isin(less_voted)]
     return df_overview
 
 
@@ -148,10 +151,12 @@ def create_all_dataframes():
     movie_name_map = movie_name_mapper(metadata_frame)
     save_dataframe(df=movie_name_map, df_name="movie_map.csv")
         
+    '''
+    # Currently not required
     rating_mtx_names = rating_matrix_name(ratings_df)
     filled_mtx_names = filled_rating_matrix(rating_mtx_names)
     save_dataframe(df=filled_mtx_names, df_name="rating_matrix_names.csv")
-    
+    '''
     
 if __name__ == "__main__":
     create_all_dataframes()

@@ -1,3 +1,2 @@
 app/model/datasets
-app/model/dataframes
-app/model/trained_models
+app/model/datasets

@@ -4,6 +4,7 @@ Uses the saved model and makes prediction
 import sys
 import os 
 import pandas as pd
+from loguru import logger
 
 d = os.getcwd()
 par = os.path.dirname(d)
@@ -19,10 +20,17 @@ prediction_model = load_model(file_name=save_file_knn)
 
 def make_prediction(*,input_movie: str) -> dict:
     """Make a prediction using a saved model pipeline."""
-    rating_matrix = load_dataframe(df_name='rating_matrix_id.csv')
     name_mapper = load_dataframe(df_name='movie_map.csv')
-    movieId = name_mapper.loc[name_mapper['original_title'] == input_movie]['movieId'].values[0]
+
+    rating_matrix = load_dataframe(df_name='rating_matrix_id.csv')
+
     rec_list = []
+
+    try:
+        movieId = name_mapper.loc[name_mapper['original_title'] == input_movie]['movieId'].values[0]
+    except:
+        return {"predictions": rec_list, "version": config.a_config.version}
+    
     movie_ratings = rating_matrix.loc[rating_matrix['movieId']==movieId].values.reshape(1,-1)[0][1:].reshape(1,-1)
     
     dist, idx = prediction_model.kneighbors(movie_ratings,n_neighbors=20)
@@ -38,7 +46,9 @@ def make_prediction(*,input_movie: str) -> dict:
         }
     return results
 
+'''
 # Use if you need to check the function make_prediction
 new_preds = make_prediction(input_movie='Ace Ventura: When Nature Calls')
 result = pd.DataFrame(new_preds)
 result.to_csv('result.csv', index=False)
+'''

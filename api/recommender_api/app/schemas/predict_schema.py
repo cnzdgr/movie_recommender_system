@@ -19,7 +19,7 @@ class MovieDataInput(BaseModel):
     inputs: List[MovieInputSchema]
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "inputs": [
                     {
