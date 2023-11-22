@@ -35,6 +35,7 @@ class ModelConfig(BaseModel):
     feature_to_must_have: list
     vote_count_lower_bound: float
     voter_min_vote: float
+    voter_retain_percentage: float
     main_key_value: str
 
 

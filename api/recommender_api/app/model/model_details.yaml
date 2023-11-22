@@ -10,10 +10,8 @@ metadata_columns:
 metadata_vars:
   - genres
   - id                #must stay
-  - original_language
   - original_title
   - overview
-  - runtime
   - title
   - vote_count
 link_vars:
@@ -24,6 +22,7 @@ feature_to_must_have:
   - tmdbId
   - overview
 main_key_value: tmdbId
-vote_count_lower_bound: 350
-voter_min_vote: 30
+vote_count_lower_bound: 750
+voter_min_vote: 150
+voter_retain_percentage: 0.075
 

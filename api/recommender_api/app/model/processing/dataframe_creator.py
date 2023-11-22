@@ -83,6 +83,8 @@ def rating_df() -> pd.DataFrame:
 
 def rating_matrix_id(rating_df):  
     rating_matrix = rating_df.pivot_table(index='movieId',  columns='userId', values='rating')
+    rating_matrix = rating_matrix.sample(frac=config.m_config.voter_retain_percentage,axis='columns')
+
     return rating_matrix
 
 
