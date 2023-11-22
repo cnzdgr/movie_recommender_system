@@ -1,15 +1,25 @@
-import { useState, useEffect } from 'react';
-import { AutoComplete } from 'antd';
+import TextField from '@mui/material/TextField';
+import { AutoComplete } from "antd";
 import {movieArray} from '../data/MovieArray';
 
-function Dropdown(){
-    console.log(movieArray)
+function Dropdown({ value, onChange }) {
+    
+    const handleSelectionClick = (event, selectedValue) => {
+        if (selectedValue === null) {
+            onChange("")
+        }else{
+            onChange(selectedValue.label)
+        }
+    }
+
     return(
         <div>
             <AutoComplete 
-            style={{ width: 200}}
-            placeholder="Type the movie that you liked..."
-            options={movieArray.title}
+            placeholder="Select Movie"
+            options={movieArray}
+            style={{ width: 320 }}
+            onChange={handleSelectionClick}
+            filterOption={true}
             />
         </div>
     )
