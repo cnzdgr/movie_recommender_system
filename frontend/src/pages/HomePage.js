@@ -11,8 +11,6 @@ function HomePage() {
     const [recommendations, setRecommendations] = useState([])
     const [isSent, setIsSent] = useState(false);
 
-    console.log("movie is:", movie)
-
     const handleSubmit = ((e) => {
         console.log("handle submit is working now")
         e.preventDefault();
@@ -28,12 +26,11 @@ function HomePage() {
             setIsSent(true);
           })
     })
-    console.log(recommendations)
     
     return(
         <section className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="grid grid-cols-12 ml-3 sm:ml-0">
-                <div className=" col-span-12 sm:col-span-9 lg:col-span-6 xl:col-span-5 ">
+                <div className=" col-span-12 sm:col-span-5 lg:col-span-5 xl:col-span-5 ">
                     <h2 className="mt-3 mb-2">Select a Movie You Liked</h2>
                     <Dropdown value={movie} onChange= {(e) => {setMovie(e)}}/>
                     <div>
@@ -46,8 +43,6 @@ function HomePage() {
                         <img className="object-cover  h-48 w-58 mt-8 ml-5" src={HeroImg} alt="mockup"/>
 
                     </div>
-
-
                 </div>
                 <div class="col-span-12 lg:col-span-5 ">
                     {(!isSent) && <div className="mt-5 mr-6">

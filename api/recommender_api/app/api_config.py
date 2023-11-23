@@ -15,8 +15,7 @@ class Settings(BaseModel):
 
     logging: LoggingSettings = LoggingSettings()
 
-    # BACKEND_CORS_ORIGINS is a comma-separated list of origins
-    # e.g: http://localhost,http://localhost:4200,http://localhost:3000
+    # During local development
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
         "http://localhost:3000",  # type: ignore
         "http://localhost:8000",  # type: ignore

@@ -59,7 +59,7 @@ def clean_metadata_df(df_meta: pd.DataFrame) ->pd.DataFrame:
 def overview_df(df_meta:pd.DataFrame) -> pd.DataFrame:
     less_voted = less_voted_movies(metadata_df())
 
-    df_overview = df_meta[['movieId', 'original_title', 'overview']]
+    df_overview = df_meta[['movieId', 'original_title', 'overview', 'tmdbId']]
     df_overview = df_overview[~df_overview['movieId'].isin(less_voted)]
     return df_overview
 

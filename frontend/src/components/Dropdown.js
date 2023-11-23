@@ -1,4 +1,3 @@
-import TextField from '@mui/material/TextField';
 import { AutoComplete } from "antd";
 import {movieArray} from '../data/MovieArray';
 
