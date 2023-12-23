@@ -1,7 +1,12 @@
-A movie recommender engine using collaborative filtering.
+# Movie recommender
 
-Used React with Tailwind to build the frontend and deployed on GCP. 
+_An end-to-end Machine Learning Project._
 
-Used FastAPI to build the backend and deployed on Railway. 
+Movie recommender engine using collaborative filtering.
+written in React using Tailwind CSS framework
+
+The frontend is written in React using Tailwind CSS framework and deployed on GCP. 
+
+FastAPI is used to wrap the ML model as an API and it's deployed on Railway. 
 
 URL: https://movies.recommendmovies.com/
